@@ -182,6 +182,40 @@ Production-Monitoring-System/
 
 > The `.env` file and virtual environment are local setup files. They should not be committed to a public repository.
 
+## 📊 Dashboard — Production Overview
+
+The dashboard provides a centralized view of daily and monthly production performance, helping users monitor production output, energy consumption, and production line efficiency through interactive charts and visual KPI summaries.
+
+**Key Highlights:**
+
+- Daily and monthly production performance summaries
+- Energy consumption and average line speed metrics
+- Production analysis by line, shift, and product
+- Visual trend charts for monitoring operational performance
+
+### 🖥️ Dashboard Preview
+
+<img width="1920" height="1032" alt="Dashboard_1 " src="https://github.com/user-attachments/assets/e33b858c-593f-4615-8aa9-0842ff0ddeae" />
+<img width="1920" height="1080" alt="Dashboard_2" src="https://github.com/user-attachments/assets/e4c24ed4-7c20-46bc-aa01-d3af0866386f" />
+<img width="1920" height="1080" alt="Dashboard_3" src="https://github.com/user-attachments/assets/e990cfca-0d43-40d1-8e82-5066b55c9b87" />
+
+## 📈 Reports & Analytics
+
+The Reports & Analytics section provides date-range-based production insights through graphical reports and numerical summaries, helping users compare shift performance and track production and energy consumption trends over time.
+
+**Key Highlights:**
+
+- Custom date-range selection for report generation
+- Total production, energy consumption, and average line speed summaries
+- Daily production and energy consumption trend charts
+- Shift-wise production and energy comparison
+- Detailed shift performance tables
+
+### 📉 Reports & Analytics Preview
+
+<img width="1920" height="1080" alt="graph_1" src="https://github.com/user-attachments/assets/16a8f1e4-c217-4980-8d0a-8139162ea2b9" />
+<img width="1920" height="1080" alt="graph_2" src="https://github.com/user-attachments/assets/b1d276a8-a9cb-4bf4-aa3d-9bfc6e208fdb" />
+
 ---
 
 ## 🚀 Run locally (Windows)
