@@ -114,6 +114,24 @@ When the application is running locally, open these pages in your browser:
 └────────────────────────────┘
 ```
 
+## 🏗️ System Architecture
+
+```mermaid
+flowchart TD
+    A["Frontend<br/>HTML, CSS, JavaScript"] --> B["FastAPI Backend"]
+    B --> C["SQLAlchemy ORM"]
+    C --> D[("MySQL Database")]
+
+    D --> C
+    C --> B
+    B --> A
+
+    style A fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
+    style B fill:#dcfce7,stroke:#16a34a,color:#166534
+    style C fill:#fef3c7,stroke:#d97706,color:#92400e
+    style D fill:#f3e8ff,stroke:#9333ea,color:#581c87
+```
+
 ## 🗃️ Database design
 
 The database uses six main tables:
