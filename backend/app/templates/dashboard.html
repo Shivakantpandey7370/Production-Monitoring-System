@@ -1,0 +1,324 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="pm-dashboard">
+
+    <!-- PAGE HEADER -->
+    <section class="pm-page-header">
+        <div>
+            <p class="pm-eyebrow">OPERATIONS OVERVIEW</p>
+            <h1 class="pm-page-title">Production Dashboard</h1>
+            <p class="pm-page-subtitle">
+                Monitor production output, energy consumption and line performance.
+            </p>
+        </div>
+
+        <div class="pm-date-filter">
+            <label for="dashboard-date" class="pm-filter-label">
+                Report date
+            </label>
+
+            <div class="pm-date-input-wrap">
+                <span aria-hidden="true">▦</span>
+                <input
+                    id="dashboard-date"
+                    class="form-control pm-date-input"
+                    type="date"
+                />
+            </div>
+
+            <button
+                type="button"
+                class="button button-primary pm-refresh-button"
+                id="refresh-dashboard"
+            >
+                <span aria-hidden="true">↻</span> Refresh
+            </button>
+        </div>
+    </section>
+
+    <!-- LOADING AND ERROR MESSAGES -->
+    <div
+        id="dashboard-loading"
+        class="pm-status pm-status-loading"
+        role="status"
+        hidden
+    >
+        Loading production reports…
+    </div>
+
+    <div
+        id="dashboard-error"
+        class="pm-status pm-status-error"
+        role="alert"
+        hidden
+    ></div>
+
+    <!-- DAILY KPIs -->
+    <section class="pm-section" aria-labelledby="daily-performance-title">
+        <div class="pm-section-heading">
+            <div>
+                <h2 id="daily-performance-title">Daily Performance</h2>
+                <p id="daily-period-label">Performance for the selected date.</p>
+            </div>
+            <span class="pm-period-chip pm-chip-blue">DAILY</span>
+        </div>
+
+        <div class="pm-kpi-grid pm-kpi-grid-four">
+
+            <article class="pm-kpi-card pm-kpi-blue">
+                <div class="pm-kpi-icon" aria-hidden="true">▦</div>
+                <div class="pm-kpi-content">
+                    <p class="pm-kpi-label">Total Production</p>
+                    <h3 id="daily-production">—</h3>
+                    <p class="pm-kpi-note">Production units</p>
+                </div>
+            </article>
+
+            <article class="pm-kpi-card pm-kpi-green">
+                <div class="pm-kpi-icon" aria-hidden="true">ϟ</div>
+                <div class="pm-kpi-content">
+                    <p class="pm-kpi-label">Total Energy</p>
+                    <h3 id="daily-energy">—</h3>
+                    <p class="pm-kpi-note">Energy consumed · kWh</p>
+                </div>
+            </article>
+
+            <article class="pm-kpi-card pm-kpi-purple">
+                <div class="pm-kpi-icon" aria-hidden="true">◷</div>
+                <div class="pm-kpi-content">
+                    <p class="pm-kpi-label">Average Line Speed</p>
+                    <h3 id="daily-speed">—</h3>
+                    <p class="pm-kpi-note">Units per minute</p>
+                </div>
+            </article>
+
+            <article class="pm-kpi-card pm-kpi-orange">
+                <div class="pm-kpi-icon" aria-hidden="true">▤</div>
+                <div class="pm-kpi-content">
+                    <p class="pm-kpi-label">Active Production Lines</p>
+                    <h3 id="daily-active-lines">—</h3>
+                    <p class="pm-kpi-note">Lines with saved records</p>
+                </div>
+            </article>
+
+        </div>
+    </section>
+
+    <!-- MONTHLY KPIs -->
+    <section class="pm-section" aria-labelledby="monthly-performance-title">
+        <div class="pm-section-heading">
+            <div>
+                <h2 id="monthly-performance-title">Monthly Performance</h2>
+                <p id="monthly-period-label">Totals for the selected calendar month.</p>
+            </div>
+            <span class="pm-period-chip pm-chip-green">MONTHLY</span>
+        </div>
+
+        <div class="pm-kpi-grid pm-kpi-grid-three">
+
+            <article class="pm-kpi-card pm-kpi-blue">
+                <div class="pm-kpi-icon" aria-hidden="true">▦</div>
+                <div class="pm-kpi-content">
+                    <p class="pm-kpi-label">Monthly Production</p>
+                    <h3 id="monthly-production">—</h3>
+                    <p class="pm-kpi-note">Production units</p>
+                </div>
+            </article>
+
+            <article class="pm-kpi-card pm-kpi-green">
+                <div class="pm-kpi-icon" aria-hidden="true">ϟ</div>
+                <div class="pm-kpi-content">
+                    <p class="pm-kpi-label">Monthly Energy</p>
+                    <h3 id="monthly-energy">—</h3>
+                    <p class="pm-kpi-note">Energy consumed · kWh</p>
+                </div>
+            </article>
+
+            <article class="pm-kpi-card pm-kpi-purple">
+                <div class="pm-kpi-icon" aria-hidden="true">◷</div>
+                <div class="pm-kpi-content">
+                    <p class="pm-kpi-label">Monthly Average Line Speed</p>
+                    <h3 id="monthly-speed">—</h3>
+                    <p class="pm-kpi-note">
+                        Units per minute · average of recorded shifts
+                    </p>
+                </div>
+            </article>
+
+        </div>
+
+        <p class="pm-footnote">
+            Monthly totals cover the selected calendar month.
+            Trend charts show records from the first day of the month
+            through the selected report date.
+        </p>
+    </section>
+
+    <!-- NINE CHARTS -->
+    <section class="pm-section" aria-labelledby="analytics-title">
+        <div class="pm-section-heading">
+            <div>
+                <h2 id="analytics-title">Production Analysis</h2>
+                <p>Compare lines, shifts, products and operating trends.</p>
+            </div>
+            <span class="pm-period-chip pm-chip-purple">9 CHARTS</span>
+        </div>
+
+        <div class="pm-chart-grid">
+
+            <!-- 1. Production by Line -->
+            <article class="pm-chart-card">
+                <div class="pm-chart-heading">
+                    <div>
+                        <h3>Production by Line</h3>
+                        <p>Selected day · production units</p>
+                    </div>
+                    <span class="pm-chart-icon pm-icon-blue" aria-hidden="true">▥</span>
+                </div>
+                <div class="pm-chart-canvas" id="production-by-line-chart"></div>
+            </article>
+
+            <!-- 2. Energy by Line -->
+            <article class="pm-chart-card">
+                <div class="pm-chart-heading">
+                    <div>
+                        <h3>Energy by Line</h3>
+                        <p>Selected day · kWh consumed</p>
+                    </div>
+                    <span class="pm-chart-icon pm-icon-green" aria-hidden="true">ϟ</span>
+                </div>
+                <div class="pm-chart-canvas" id="energy-by-line-chart"></div>
+            </article>
+
+            <!-- 3. Production Trend -->
+            <article class="pm-chart-card">
+                <div class="pm-chart-heading">
+                    <div>
+                        <h3>Production Trend</h3>
+                        <p>Month to selected date</p>
+                    </div>
+                    <span class="pm-chart-icon pm-icon-blue" aria-hidden="true">↗</span>
+                </div>
+                <div class="pm-chart-canvas" id="production-trend-chart"></div>
+            </article>
+
+            <!-- 4. Energy Trend -->
+            <article class="pm-chart-card">
+                <div class="pm-chart-heading">
+                    <div>
+                        <h3>Energy Trend</h3>
+                        <p>Month to selected date · kWh</p>
+                    </div>
+                    <span class="pm-chart-icon pm-icon-orange" aria-hidden="true">ϟ</span>
+                </div>
+                <div class="pm-chart-canvas" id="energy-trend-chart"></div>
+            </article>
+
+            <!-- 5. Line Speed Trend -->
+            <article class="pm-chart-card pm-chart-card-wide">
+                <div class="pm-chart-heading">
+                    <div>
+                        <h3>Line Speed Trend</h3>
+                        <p>Daily average speed by line · units/min</p>
+                    </div>
+                    <span class="pm-chart-icon pm-icon-purple" aria-hidden="true">◷</span>
+                </div>
+                <div class="pm-chart-canvas" id="line-speed-trend-chart"></div>
+            </article>
+
+            <!-- 6. Production by Shift -->
+            <article class="pm-chart-card">
+                <div class="pm-chart-heading">
+                    <div>
+                        <h3>Production by Shift</h3>
+                        <p>Selected day · units</p>
+                    </div>
+                    <span class="pm-chart-icon pm-icon-blue" aria-hidden="true">▤</span>
+                </div>
+                <div class="pm-chart-canvas" id="shift-production-chart"></div>
+            </article>
+
+            <!-- 7. Energy by Shift -->
+            <article class="pm-chart-card">
+                <div class="pm-chart-heading">
+                    <div>
+                        <h3>Energy by Shift</h3>
+                        <p>Selected day · kWh</p>
+                    </div>
+                    <span class="pm-chart-icon pm-icon-orange" aria-hidden="true">ϟ</span>
+                </div>
+                <div class="pm-chart-canvas" id="shift-energy-chart"></div>
+            </article>
+
+            <!-- 8. Production by Product -->
+            <article class="pm-chart-card">
+                <div class="pm-chart-heading">
+                    <div>
+                        <h3>Production by Product</h3>
+                        <p>Selected day · product contribution</p>
+                    </div>
+                    <span class="pm-chart-icon pm-icon-purple" aria-hidden="true">◔</span>
+                </div>
+                <div class="pm-chart-canvas" id="product-production-chart"></div>
+            </article>
+
+            <!-- 9. Energy by Product -->
+            <article class="pm-chart-card">
+                <div class="pm-chart-heading">
+                    <div>
+                        <h3>Energy by Product</h3>
+                        <p>Selected day · kWh by product</p>
+                    </div>
+                    <span class="pm-chart-icon pm-icon-green" aria-hidden="true">ϟ</span>
+                </div>
+                <div class="pm-chart-canvas" id="product-energy-chart"></div>
+            </article>
+
+        </div>
+    </section>
+
+    <!-- DAILY LINE PERFORMANCE TABLE -->
+    <section class="pm-section pm-table-section"
+             aria-labelledby="line-performance-title">
+        <div class="pm-section-heading">
+            <div>
+                <h2 id="line-performance-title">Daily Line Performance</h2>
+                <p>Line-level summary for the selected report date.</p>
+            </div>
+            <span class="pm-period-chip pm-chip-blue">LINE SUMMARY</span>
+        </div>
+
+        <div class="pm-table-card">
+            <div class="pm-table-scroll">
+                <table class="pm-data-table">
+                    <thead>
+                        <tr>
+                            <th>Production Line</th>
+                            <th>Product</th>
+                            <th>Total Production</th>
+                            <th>Total Energy (kWh)</th>
+                            <th>Average Speed</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="line-performance-body">
+                        <tr>
+                            <td class="pm-empty-cell" colspan="6">
+                                Loading line performance…
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+<script src="{{ url_for('static', path='/js/dashboard.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,26 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Virtual environments
+.venv/
+backend/.venv/
+venv/
+
+# Environment secrets
+.env
+backend/.env
+.env.*
+!.env.example
+
+# Test cache
+.pytest_cache/
+.coverage
+
+# Editor and OS files
+.vscode/
+.DS_Store
+Thumbs.db
+
+htmlcov/

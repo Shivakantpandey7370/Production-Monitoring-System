@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block title %}Production Records | Production Monitoring{% endblock %}
+
+{% block content %}
+<div class="records-page">
+
+    <div class="records-header">
+        <div>
+            <p class="records-eyebrow">PRODUCTION MANAGEMENT</p>
+            <h1>Production Records</h1>
+            <p>Review saved production data by date, line, product and shift.</p>
+        </div>
+
+        <a href="/operator" class="records-primary-button">
+            + Add Production Entry
+        </a>
+    </div>
+
+    <div id="records-message" class="records-message" hidden></div>
+
+    <section class="records-card">
+        <h2>Filter Records</h2>
+
+        <div class="records-filters">
+            <div>
+                <label for="records-date">Production date</label>
+                <input type="date" id="records-date">
+            </div>
+
+            <div>
+                <label for="records-line">Production line</label>
+                <select id="records-line">
+                    <option value="">All lines</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="records-shift">Shift</label>
+                <select id="records-shift">
+                    <option value="">All shifts</option>
+                </select>
+            </div>
+
+            <button type="button" id="records-apply">
+                Apply Filters
+            </button>
+
+            <button type="button" id="records-clear" class="records-secondary-button">
+                Clear
+            </button>
+        </div>
+    </section>
+
+    <section class="records-summary">
+        <article>
+            <span>Total records</span>
+            <strong id="records-count">—</strong>
+        </article>
+
+        <article>
+            <span>Total production</span>
+            <strong id="records-production">—</strong>
+        </article>
+
+        <article>
+            <span>Total energy</span>
+            <strong id="records-energy">—</strong>
+        </article>
+    </section>
+
+    <section class="records-card">
+        <div class="records-table-heading">
+            <div>
+                <h2>Saved Production Data</h2>
+                <p id="records-period">All available records</p>
+            </div>
+
+            <button type="button" id="records-refresh"
+                    class="records-secondary-button">
+                ↻ Refresh
+            </button>
+        </div>
+
+        <div class="records-table-wrap">
+            <table class="records-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Line</th>
+                        <th>Product</th>
+                        <th>Shift</th>
+                        <th>Production</th>
+                        <th>Speed</th>
+                        <th>Energy</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody id="records-body">
+                    <tr>
+                        <td colspan="8" class="records-empty">
+                            Loading records…
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p class="records-note">
+            Use Edit to open a saved entry in the Production Entry page.
+        </p>
+    </section>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', path='/js/records.js') }}"></script>
+{% endblock %}

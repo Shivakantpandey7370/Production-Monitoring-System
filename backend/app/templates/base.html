@@ -1,0 +1,265 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}Production Monitoring System{% endblock %}</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', path='/css/style.css') }}">
+</head>
+
+<body>
+<div class="pm-layout">
+
+    <!-- Dark left navigation -->
+    <aside class="pm-sidebar" id="pm-sidebar">
+
+        <a href="/dashboard" class="pm-brand">
+            <span class="pm-brand-icon">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M3 20V11l5 3V8l5 4V4h5v16H3Z"
+                          fill="currentColor" opacity=".95"/>
+                    <path d="M16 8h2M16 11h2M16 14h2"
+                          stroke="#15243b" stroke-width="1.5"
+                          stroke-linecap="round"/>
+                    <path d="M6 17h2M11 16h2"
+                          stroke="#15243b" stroke-width="1.5"
+                          stroke-linecap="round"/>
+                </svg>
+            </span>
+
+            <span class="pm-brand-text">
+                <strong>Production</strong>
+                <strong>Monitoring</strong>
+            </span>
+        </a>
+
+        <div class="pm-workspace">
+            <span class="pm-status-dot"></span>
+            <div>
+                <strong>Production Plant</strong>
+                <small>Monitoring Workspace</small>
+            </div>
+        </div>
+
+        <nav class="pm-nav" aria-label="Main navigation">
+
+            <p class="pm-nav-label">WORKSPACE</p>
+
+            <a href="/dashboard"
+               class="pm-nav-link {% if active_page == 'dashboard' %}is-active{% endif %}">
+                <span class="pm-nav-icon">▦</span>
+                <span>Dashboard</span>
+            </a>
+
+            <div class="pm-nav-group {% if active_page in ['entry', 'records'] %}is-open{% endif %}">
+                <button type="button"
+                        class="pm-nav-link pm-nav-toggle"
+                        aria-expanded="{% if active_page in ['entry', 'records'] %}true{% else %}false{% endif %}"
+                        data-nav-toggle="pm-operations-menu">
+                    <span class="pm-nav-icon">◈</span>
+                    <span>Operations</span>
+                    <span class="pm-chevron"></span>
+                </button>
+
+                <div class="pm-submenu" id="pm-operations-menu">
+                    <a href="/operator"
+                       class="pm-sub-link {% if active_page == 'entry' %}is-active{% endif %}">
+                        <span class="pm-sub-dot"></span>
+                        Production Entry
+                    </a>
+
+                    <a href="/records"
+                       class="pm-sub-link {% if active_page == 'records' %}is-active{% endif %}">
+                        <span class="pm-sub-dot"></span>
+                        Production Records
+                    </a>
+                </div>
+            </div>
+
+            <p class="pm-nav-label pm-nav-label-spaced">REPORTS &amp; ANALYTICS</p>
+
+            <div class="pm-nav-group {% if active_page == 'reports' %}is-open{% endif %}">
+                <button type="button"
+                        class="pm-nav-link pm-nav-toggle {% if active_page == 'reports' %}is-section-active{% endif %}"
+                        aria-expanded="{% if active_page == 'reports' %}true{% else %}false{% endif %}"
+                        data-nav-toggle="pm-reports-menu">
+                    <span class="pm-nav-icon">▤</span>
+                    <span>Reports</span>
+                    <span class="pm-chevron"></span>
+                </button>
+
+                <div class="pm-submenu" id="pm-reports-menu">
+                    <a href="/reports"
+                       class="pm-sub-link {% if active_page == 'reports' %}is-active{% endif %}">
+                        <span class="pm-sub-dot"></span>
+                        Reports &amp; Trends
+                    </a>
+                </div>
+            </div>
+
+            <p class="pm-nav-label pm-nav-label-spaced">CONFIGURATION</p>
+
+            <div class="pm-nav-group {% if active_page == 'master-data' %}is-open{% endif %}">
+                <button type="button"
+                        class="pm-nav-link pm-nav-toggle {% if active_page == 'master-data' %}is-section-active{% endif %}"
+                        aria-expanded="{% if active_page == 'master-data' %}true{% else %}false{% endif %}"
+                        data-nav-toggle="pm-master-menu">
+                    <span class="pm-nav-icon">▧</span>
+                    <span>Master Data</span>
+                    <span class="pm-chevron"></span>
+                </button>
+
+                <div class="pm-submenu" id="pm-master-menu">
+                    <a href="/master-data"
+                       class="pm-sub-link {% if active_page == 'master-data' %}is-active{% endif %}">
+                        <span class="pm-sub-dot"></span>
+                        Lines &amp; Products
+                    </a>
+                </div>
+            </div>
+
+        </nav>
+
+        <div class="pm-sidebar-footer">
+            <div class="pm-user-avatar">OP</div>
+            <div class="pm-user-info">
+                <strong>Operator</strong>
+                <small>Production Monitoring</small>
+            </div>
+            <span class="pm-user-status" title="Application ready"></span>
+        </div>
+    </aside>
+
+    <!-- Mobile backdrop -->
+    <button type="button"
+            class="pm-backdrop"
+            id="pm-backdrop"
+            aria-label="Close navigation"
+            hidden></button>
+
+    <!-- Main content -->
+    <main class="pm-main">
+
+        <header class="pm-topbar">
+            <div class="pm-topbar-left">
+                <button type="button"
+                        class="pm-menu-button"
+                        id="pm-menu-button"
+                        aria-label="Open navigation"
+                        aria-controls="pm-sidebar"
+                        aria-expanded="false">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+
+                <div class="pm-breadcrumb">
+                    <span>Production Monitoring</span>
+                    <span class="pm-breadcrumb-divider">/</span>
+                    <strong>
+                        {% if active_page == 'dashboard' %}
+                            Dashboard
+                        {% elif active_page == 'entry' %}
+                            Production Entry
+                        {% elif active_page == 'records' %}
+                            Production Records
+                        {% elif active_page == 'reports' %}
+                            Reports &amp; Trends
+                        {% elif active_page == 'master-data' %}
+                            Master Data
+                        {% else %}
+                            Workspace
+                        {% endif %}
+                    </strong>
+                </div>
+            </div>
+
+            <div class="pm-topbar-right">
+                <span class="pm-online-indicator">
+                    <span></span>
+                    System Online
+                </span>
+            </div>
+        </header>
+
+        <div class="pm-content">
+            {% block content %}{% endblock %}
+        </div>
+
+        <footer class="pm-footer">
+            <span>Production Monitoring System</span>
+            <span>Operations Workspace</span>
+        </footer>
+
+    </main>
+</div>
+
+<script>
+(function () {
+    const sidebar = document.getElementById("pm-sidebar");
+    const menuButton = document.getElementById("pm-menu-button");
+    const backdrop = document.getElementById("pm-backdrop");
+
+    function openMobileMenu() {
+        sidebar.classList.add("pm-sidebar-visible");
+        backdrop.hidden = false;
+        menuButton.setAttribute("aria-expanded", "true");
+        document.body.classList.add("pm-mobile-nav-open");
+    }
+
+    function closeMobileMenu() {
+        sidebar.classList.remove("pm-sidebar-visible");
+        backdrop.hidden = true;
+        menuButton.setAttribute("aria-expanded", "false");
+        document.body.classList.remove("pm-mobile-nav-open");
+    }
+
+    menuButton.addEventListener("click", function () {
+        if (sidebar.classList.contains("pm-sidebar-visible")) {
+            closeMobileMenu();
+        } else {
+            openMobileMenu();
+        }
+    });
+
+    backdrop.addEventListener("click", closeMobileMenu);
+
+    document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape") {
+            closeMobileMenu();
+        }
+    });
+
+    document.querySelectorAll("[data-nav-toggle]").forEach(function (button) {
+        button.addEventListener("click", function () {
+            const targetId = button.dataset.navToggle;
+            const submenu = document.getElementById(targetId);
+            const group = button.closest(".pm-nav-group");
+
+            const willOpen = !group.classList.contains("is-open");
+            group.classList.toggle("is-open", willOpen);
+            button.setAttribute("aria-expanded", String(willOpen));
+
+            if (submenu) {
+                submenu.setAttribute("aria-hidden", String(!willOpen));
+            }
+        });
+    });
+
+    sidebar.querySelectorAll("a").forEach(function (link) {
+        link.addEventListener("click", function () {
+            if (window.matchMedia("(max-width: 900px)").matches) {
+                closeMobileMenu();
+            }
+        });
+    });
+})();
+</script>
+
+{% block scripts %}{% endblock %}
+</body>
+</html>

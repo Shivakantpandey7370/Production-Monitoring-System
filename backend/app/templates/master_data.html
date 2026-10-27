@@ -1,0 +1,139 @@
+
+{% extends "base.html" %}
+
+{% block title %}Master Data | Production Monitoring{% endblock %}
+
+{% block content %}
+<div class="md-page">
+
+    <header class="md-header">
+        <div>
+            <p class="md-eyebrow">SYSTEM CONFIGURATION</p>
+            <h1>Master Data</h1>
+            <p>View production lines, products, shifts and permitted line-product combinations.</p>
+        </div>
+
+        <button type="button" id="md-refresh" class="md-button">
+            Refresh Data
+        </button>
+    </header>
+
+    <div id="md-status" class="md-status" role="status" aria-live="polite">
+        Loading master data…
+    </div>
+
+    <section class="md-stats">
+        <article class="md-stat-card">
+            <span class="md-stat-icon md-blue">L</span>
+            <div>
+                <p>Production Lines</p>
+                <strong id="md-line-count">—</strong>
+            </div>
+        </article>
+
+        <article class="md-stat-card">
+            <span class="md-stat-icon md-purple">P</span>
+            <div>
+                <p>Products</p>
+                <strong id="md-product-count">—</strong>
+            </div>
+        </article>
+
+        <article class="md-stat-card">
+            <span class="md-stat-icon md-orange">S</span>
+            <div>
+                <p>Shifts</p>
+                <strong id="md-shift-count">—</strong>
+            </div>
+        </article>
+
+        <article class="md-stat-card">
+            <span class="md-stat-icon md-green">↔</span>
+            <div>
+                <p>Allowed Mappings</p>
+                <strong id="md-mapping-count">—</strong>
+            </div>
+        </article>
+    </section>
+
+    <section class="md-section">
+        <div class="md-section-heading">
+            <div>
+                <h2>Production Lines</h2>
+                <p>Lines configured in the system.</p>
+            </div>
+        </div>
+
+        <div id="md-lines" class="md-line-grid">
+            <p class="md-placeholder">Loading production lines…</p>
+        </div>
+    </section>
+
+    <section class="md-section">
+        <div class="md-section-heading">
+            <div>
+                <h2>Products</h2>
+                <p>Products available in the system.</p>
+            </div>
+        </div>
+
+        <div class="md-panel">
+            <div class="md-table-wrap">
+                <table class="md-table">
+                    <thead>
+                        <tr>
+                            <th>Product ID</th>
+                            <th>Product Name</th>
+                        </tr>
+                    </thead>
+                    <tbody id="md-products">
+                        <tr>
+                            <td colspan="2" class="md-empty">Loading products…</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <section class="md-section">
+        <div class="md-section-heading">
+            <div>
+                <h2>Production Shifts</h2>
+                <p>Shifts configured for production recording.</p>
+            </div>
+        </div>
+
+        <div id="md-shifts" class="md-shift-grid">
+            <p class="md-placeholder">Loading shifts…</p>
+        </div>
+    </section>
+
+    <section class="md-section">
+        <div class="md-section-heading">
+            <div>
+                <h2>Allowed Line–Product Mappings</h2>
+                <p>Each line can produce only its permitted products.</p>
+            </div>
+        </div>
+
+        <div id="md-mappings" class="md-mapping-grid">
+            <p class="md-placeholder">Loading allowed mappings…</p>
+        </div>
+    </section>
+
+    <footer class="md-note">
+        <strong>Read-only view</strong>
+        <p>
+            This page displays data from the existing master-data APIs.
+            To change lines, products, shifts or mappings, the backend would
+            need corresponding write APIs.
+        </p>
+    </footer>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', path='/js/master_data.js') }}"></script>
+{% endblock %}

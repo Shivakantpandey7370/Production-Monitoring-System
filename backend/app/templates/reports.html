@@ -1,0 +1,278 @@
+
+{% extends "base.html" %}
+
+{% block title %}Reports & Trends | Production Monitoring{% endblock %}
+
+{% block content %}
+<div class="rt-page">
+
+    <header class="rt-header">
+        <div>
+            <p class="rt-eyebrow">PRODUCTION ANALYTICS</p>
+            <h1>Reports &amp; Trends</h1>
+            <p class="rt-subtitle">
+                Monitor production output, energy consumption and line performance.
+            </p>
+        </div>
+        <button type="button" id="rt-refresh" class="rt-button rt-button-light">
+            Refresh
+        </button>
+    </header>
+
+    <section class="rt-panel rt-filter-panel">
+        <div class="rt-section-heading">
+            <div>
+                <h2>Report Period</h2>
+                <p>Select the dates to analyze your production data.</p>
+            </div>
+        </div>
+
+        <form id="rt-filter-form" class="rt-filters">
+            <div class="rt-field">
+                <label for="rt-start-date">Start date</label>
+                <input type="date" id="rt-start-date" required>
+            </div>
+
+            <div class="rt-field">
+                <label for="rt-end-date">End date</label>
+                <input type="date" id="rt-end-date" required>
+            </div>
+
+            <button type="submit" id="rt-generate" class="rt-button">
+                Generate Report
+            </button>
+        </form>
+
+        <p id="rt-status" class="rt-status" role="status" aria-live="polite">
+            Preparing reports…
+        </p>
+    </section>
+
+    <section class="rt-kpi-grid">
+        <article class="rt-kpi-card">
+            <div class="rt-kpi-icon rt-icon-blue">P</div>
+            <div>
+                <p>Total Production</p>
+                <strong id="rt-total-production">—</strong>
+                <span>Selected date range</span>
+            </div>
+        </article>
+
+        <article class="rt-kpi-card">
+            <div class="rt-kpi-icon rt-icon-orange">E</div>
+            <div>
+                <p>Total Energy</p>
+                <strong id="rt-total-energy">—</strong>
+                <span>Selected date range</span>
+            </div>
+        </article>
+
+        <article class="rt-kpi-card">
+            <div class="rt-kpi-icon rt-icon-purple">S</div>
+            <div>
+                <p>Average Line Speed</p>
+                <strong id="rt-average-speed">—</strong>
+                <span>Selected date range</span>
+            </div>
+        </article>
+    </section>
+
+    <section class="rt-section">
+        <div class="rt-section-heading">
+            <div>
+                <h2>Production &amp; Energy Trends</h2>
+                <p>Track daily totals across the selected period.</p>
+            </div>
+        </div>
+
+        <div class="rt-chart-grid">
+            <article class="rt-panel rt-chart-card">
+                <h3>Daily Production</h3>
+                <p>Total production quantity per day</p>
+                <div class="rt-chart-wrap">
+                    <canvas id="rt-production-trend"></canvas>
+                    <p id="rt-empty-production-trend" class="rt-chart-empty" hidden>
+                        No production data for this period.
+                    </p>
+                </div>
+            </article>
+
+            <article class="rt-panel rt-chart-card">
+                <h3>Daily Energy Consumption</h3>
+                <p>Total energy consumed per day</p>
+                <div class="rt-chart-wrap">
+                    <canvas id="rt-energy-trend"></canvas>
+                    <p id="rt-empty-energy-trend" class="rt-chart-empty" hidden>
+                        No energy data for this period.
+                    </p>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <section class="rt-section">
+        <div class="rt-section-heading">
+            <div>
+                <h2>Line Performance</h2>
+                <p>Compare production lines and observe speed changes.</p>
+            </div>
+        </div>
+
+        <div class="rt-chart-grid">
+            <article class="rt-panel rt-chart-card">
+                <h3>Average Line Speed Trend</h3>
+                <p>Average speed for each line by date</p>
+                <div class="rt-chart-wrap">
+                    <canvas id="rt-speed-trend"></canvas>
+                    <p id="rt-empty-speed-trend" class="rt-chart-empty" hidden>
+                        No line-speed data for this period.
+                    </p>
+                </div>
+            </article>
+
+            <article class="rt-panel rt-chart-card">
+                <h3>Production by Line</h3>
+                <p>Total production for each line</p>
+                <div class="rt-chart-wrap">
+                    <canvas id="rt-line-production"></canvas>
+                    <p id="rt-empty-line-production" class="rt-chart-empty" hidden>
+                        No line production data for this period.
+                    </p>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <section class="rt-section">
+        <div class="rt-section-heading">
+            <div>
+                <h2>Shift Performance</h2>
+                <p>Compare production, energy and average speed for shifts A, B and C.</p>
+            </div>
+        </div>
+
+        <div class="rt-chart-grid">
+            <article class="rt-panel rt-chart-card">
+                <h3>Production by Shift</h3>
+                <p>Total quantity produced per shift</p>
+                <div class="rt-chart-wrap">
+                    <canvas id="rt-shift-production"></canvas>
+                    <p id="rt-empty-shift-production" class="rt-chart-empty" hidden>
+                        No shift production data for this period.
+                    </p>
+                </div>
+            </article>
+
+            <article class="rt-panel rt-chart-card">
+                <h3>Energy by Shift</h3>
+                <p>Total energy consumed per shift</p>
+                <div class="rt-chart-wrap">
+                    <canvas id="rt-shift-energy"></canvas>
+                    <p id="rt-empty-shift-energy" class="rt-chart-empty" hidden>
+                        No shift energy data for this period.
+                    </p>
+                </div>
+            </article>
+        </div>
+
+        <article class="rt-panel rt-table-card">
+            <div class="rt-section-heading">
+                <div>
+                    <h3>Shift Performance Details</h3>
+                    <p>Numerical summary of the selected period.</p>
+                </div>
+            </div>
+
+            <div class="rt-table-wrap">
+                <table class="rt-table">
+                    <thead>
+                        <tr>
+                            <th>Shift</th>
+                            <th>Total Production</th>
+                            <th>Total Energy</th>
+                            <th>Average Speed</th>
+                        </tr>
+                    </thead>
+                    <tbody id="rt-shift-table">
+                        <tr>
+                            <td colspan="4" class="rt-empty-cell">Loading…</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </article>
+    </section>
+
+    <section class="rt-section">
+        <div class="rt-section-heading">
+            <div>
+                <h2>Product Performance</h2>
+                <p>Compare production and energy consumption across products.</p>
+            </div>
+        </div>
+
+        <div class="rt-chart-grid">
+            <article class="rt-panel rt-chart-card">
+                <h3>Production by Product</h3>
+                <p>Total production for each product across all lines</p>
+                <div class="rt-chart-wrap">
+                    <canvas id="rt-product-production"></canvas>
+                    <p id="rt-empty-product-production" class="rt-chart-empty" hidden>
+                        No product production data for this period.
+                    </p>
+                </div>
+            </article>
+
+            <article class="rt-panel rt-chart-card">
+                <h3>Energy by Product</h3>
+                <p>Total energy for each product across all lines</p>
+                <div class="rt-chart-wrap">
+                    <canvas id="rt-product-energy"></canvas>
+                    <p id="rt-empty-product-energy" class="rt-chart-empty" hidden>
+                        No product energy data for this period.
+                    </p>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <section class="rt-section">
+        <div class="rt-section-heading">
+            <div>
+                <h2>Line, Product &amp; Shift Breakdown</h2>
+                <p>Detailed figures for each combination returned by the report API.</p>
+            </div>
+        </div>
+
+        <article class="rt-panel rt-table-card">
+            <div class="rt-table-wrap">
+                <table class="rt-table">
+                    <thead>
+                        <tr>
+                            <th>Line</th>
+                            <th>Product</th>
+                            <th>Shift</th>
+                            <th>Total Production</th>
+                            <th>Total Energy</th>
+                        </tr>
+                    </thead>
+                    <tbody id="rt-breakdown-table">
+                        <tr>
+                            <td colspan="5" class="rt-empty-cell">Loading…</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="rt-table-note">
+                These totals are grouped by line, product and shift for the selected date range.
+            </p>
+        </article>
+    </section>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{{ url_for('static', path='/js/reports.js') }}"></script>
+{% endblock %}

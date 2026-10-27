@@ -1,0 +1,267 @@
+{% extends "base.html" %}
+
+{% block title %}Production Entry | Production Monitoring{% endblock %}
+
+{% block content %}
+<div class="operator-page">
+
+    <header class="oe-page-header">
+        <div>
+            <p class="oe-eyebrow">OPERATOR WORKSPACE</p>
+            <h1>Production Entry</h1>
+            <p>Record shift-wise output, line speed and energy consumption.</p>
+        </div>
+
+        <div class="oe-date-summary">
+            <span aria-hidden="true">▦</span>
+            <span id="oe-date-summary">Today's production</span>
+        </div>
+    </header>
+
+    <!-- Overall status -->
+    <div id="oe-message" class="oe-message" role="status" hidden></div>
+
+    <!-- Entry form -->
+    <section class="oe-card">
+        <div class="oe-card-heading">
+            <div class="oe-heading-icon">✎</div>
+            <div>
+                <h2 id="oe-form-title">Enter Production Data</h2>
+                <p>Complete all required fields before reviewing your entry.</p>
+            </div>
+        </div>
+
+        <div class="oe-rule-note">
+            <span aria-hidden="true">ⓘ</span>
+            One product can be assigned to each line per day. Record production
+            separately for shifts A, B and C.
+        </div>
+
+        <form id="oe-form" novalidate>
+            <div class="oe-form-grid">
+
+                <div class="oe-field">
+                    <label for="oe-date">Production date <span>*</span></label>
+                    <input
+                        class="form-control"
+                        type="date"
+                        id="oe-date"
+                        name="production_date"
+                        required
+                    >
+                    <small>Choose the date for this shift's production.</small>
+                </div>
+
+                <div class="oe-field">
+                    <label for="oe-line">Production line <span>*</span></label>
+                    <select
+                        class="form-control"
+                        id="oe-line"
+                        name="line_id"
+                        required
+                    >
+                        <option value="">Loading lines…</option>
+                    </select>
+                    <small>Select the line that operated.</small>
+                </div>
+
+                <div class="oe-field">
+                    <label for="oe-product">Product <span>*</span></label>
+                    <select
+                        class="form-control"
+                        id="oe-product"
+                        name="product_id"
+                        required
+                        disabled
+                    >
+                        <option value="">Select a line first</option>
+                    </select>
+                    <small id="oe-product-help">
+                        Products are filtered by the selected line.
+                    </small>
+                </div>
+
+                <div class="oe-field">
+                    <label for="oe-shift">Shift <span>*</span></label>
+                    <select
+                        class="form-control"
+                        id="oe-shift"
+                        name="shift_id"
+                        required
+                    >
+                        <option value="">Loading shifts…</option>
+                    </select>
+                    <small>Each shift can have one record per line per day.</small>
+                </div>
+
+                <div class="oe-field">
+                    <label for="oe-quantity">Production quantity (units) <span>*</span></label>
+                    <input
+                        class="form-control"
+                        type="number"
+                        id="oe-quantity"
+                        name="production_quantity"
+                        min="0"
+                        step="1"
+                        placeholder="e.g. 1200"
+                        required
+                    >
+                    <small>Enter a whole number, zero or higher.</small>
+                </div>
+
+                <div class="oe-field">
+                    <label for="oe-speed">Line speed (units/min) <span>*</span></label>
+                    <input
+                        class="form-control"
+                        type="number"
+                        id="oe-speed"
+                        name="line_speed"
+                        min="0"
+                        step="any"
+                        placeholder="e.g. 50.5"
+                        required
+                    >
+                    <small>Enter the recorded speed for this shift.</small>
+                </div>
+
+                <div class="oe-field">
+                    <label for="oe-energy">Energy consumed (kWh) <span>*</span></label>
+                    <input
+                        class="form-control"
+                        type="number"
+                        id="oe-energy"
+                        name="energy_consumed"
+                        min="0"
+                        step="any"
+                        placeholder="e.g. 230.75"
+                        required
+                    >
+                    <small>Enter this shift's energy consumption.</small>
+                </div>
+
+            </div>
+
+            <div id="oe-field-error" class="oe-field-error" hidden></div>
+
+            <div class="oe-form-actions">
+                <button
+                    type="button"
+                    class="button button-secondary"
+                    id="oe-reset"
+                >
+                    Reset
+                </button>
+
+                <button
+                    type="button"
+                    class="button button-primary"
+                    id="oe-review-button"
+                >
+                    Review Entry →
+                </button>
+            </div>
+        </form>
+    </section>
+
+    <!-- Review before save -->
+    <section class="oe-card oe-review-card" id="oe-review-panel" hidden>
+        <div class="oe-card-heading">
+            <div class="oe-heading-icon oe-heading-green">✓</div>
+            <div>
+                <h2>Review Before Saving</h2>
+                <p>Check the details carefully before submitting them to the database.</p>
+            </div>
+        </div>
+
+        <div id="oe-review-content" class="oe-review-grid"></div>
+
+        <div class="oe-form-actions">
+            <button
+                type="button"
+                class="button button-secondary"
+                id="oe-back-button"
+            >
+                ← Back to Edit
+            </button>
+
+            <button
+                type="button"
+                class="button button-success"
+                id="oe-confirm-button"
+            >
+                ✓ Confirm & Save
+            </button>
+        </div>
+    </section>
+
+    <!-- Daily records -->
+    <section class="oe-card oe-records-card">
+        <div class="oe-records-heading">
+            <div class="oe-card-heading oe-card-heading-no-margin">
+                <div class="oe-heading-icon oe-heading-blue">▤</div>
+                <div>
+                    <h2>Daily Production Records</h2>
+                    <p>Review the entries saved for the selected date.</p>
+                </div>
+            </div>
+
+            <button
+                type="button"
+                class="button button-secondary"
+                id="oe-reload-records"
+            >
+                ↻ Refresh
+            </button>
+        </div>
+
+        <div class="oe-record-summary">
+            <div>
+                <span class="oe-summary-label">Saved records</span>
+                <strong id="oe-record-count">0</strong>
+            </div>
+            <div>
+                <span class="oe-summary-label">Production total</span>
+                <strong id="oe-record-production">0</strong>
+            </div>
+            <div>
+                <span class="oe-summary-label">Energy total</span>
+                <strong id="oe-record-energy">0 kWh</strong>
+            </div>
+        </div>
+
+        <div class="oe-table-wrap">
+            <table class="oe-table">
+                <thead>
+                    <tr>
+                        <th>Line</th>
+                        <th>Product</th>
+                        <th>Shift</th>
+                        <th>Production</th>
+                        <th>Speed</th>
+                        <th>Energy</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody id="oe-records-body">
+                    <tr>
+                        <td colspan="7" class="oe-empty-row">
+                            Select a date to load records.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p class="oe-table-footnote">
+            An existing record can be edited. A second record for the same
+            line, date and shift cannot be created.
+        </p>
+    </section>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', path='/js/operator.js') }}"></script>
+{% endblock %}
